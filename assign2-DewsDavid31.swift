@@ -2,12 +2,28 @@
 import Foundation
 
 assign02_main()
+/// A main method call to best compare to python's main, called impertively 
+
 typealias split3Ways = (first: [Int], second: [Int], third: [Int])
+/// A struct is used in place multiple arrays being returned
+
 typealias tuple = (list: [Int], time: Float)
+/// A tuple struct had to be made for return values to be similar
+
 typealias split2Ways = (first: [Int], second: [Int])
+/// A separate struct had to be made for type sensitivity of the third array being absent
 
 
 func bubbleSort(listOfItems: [Int]) -> tuple {
+/**
+	A method of sort using the swapping of two elements at a time
+	
+	Stackoverflow's suggested use of dispatch time leads to odd calculations of time
+	
+		- listOfItems: Int array needed to be sorted
+		- returns: tuple struct of the sorted list as list member and float of time elapsed
+		 as time member
+*/
 	var tempList = listOfItems
 	let startTime = DispatchTime.now().uptimeNanoseconds
 	for offset in 1..<listOfItems.count {
@@ -24,6 +40,19 @@ func bubbleSort(listOfItems: [Int]) -> tuple {
 }
 
 func mergeSort(listOfItems: [Int], splitBy3: Bool) -> tuple{
+/**
+	A method of sort of dividing a list and merging back in order
+	
+		- listOfItems: Int array of unsorted numbers
+		splitBy3: a boolean flag where:
+			- true: mergeSort splits list into 3
+			- false: mergeSort splits list into 2
+	
+	for simplicity of code, merge only merges in batches of 2 at a time
+	Dispatch time has odd innaccuracies
+	
+		- returns: tuple struct with list as the sorted integer array and time as the elapsed time 
+*/
 	let startTime = DispatchTime.now().uptimeNanoseconds
 	let nextList = listOfItems
 	let tempList = mergeSortRecursive(listOfItems: nextList,splitBy3: splitBy3)
@@ -32,11 +61,23 @@ func mergeSort(listOfItems: [Int], splitBy3: Bool) -> tuple{
 }
 
 func mergeSortRecursive(listOfItems: [Int], splitBy3: Bool) -> [Int]{
+/**
+	A recursive helper function for merge sort to allow timing to be possible
+	
+		- listOfItems: current unsorted array of integers
+		
+		- splitBy3: boolean flag on if next split should be in thirds or halves
+			- true: splint int array into 3 pieces
+			- false: splint int array into half
+	merge still only merges pairs of 2, but combines one pair if split by 3 to make work
+*/
 	if(listOfItems.count <= 1){
 		return listOfItems
 	}
 	else if(splitBy3){
 		let splittedList = splitTo3(listOfItems: listOfItems)
+		// HOLY LABELS BATMAN!! we recursively call merge on splitted portions
+		//  merging the right side since we have 3 pieces
 		return merge(left: merge(left: mergeSortRecursive(listOfItems: splittedList.first,splitBy3: splitBy3),right:  mergeSortRecursive(listOfItems: splittedList.second,splitBy3: splitBy3)),right: mergeSortRecursive(listOfItems: splittedList.third,splitBy3: splitBy3))
 	}
 	let splittedList = splitTo2(listOfItems: listOfItems)
@@ -44,6 +85,15 @@ func mergeSortRecursive(listOfItems: [Int], splitBy3: Bool) -> [Int]{
 }
 
 func merge(left: [Int], right: [Int]) -> [Int] {
+/**
+	helper method for merge step of merge sort, combines lists after finding maximums
+		- left: current left side list from splitting portion
+		
+\		- right: current right side list from splitting portion
+			- if splitBy3 is true, this side gets the middle and right portions
+		
+		- returns: int array of resulting merged list
+*/
 	var temp = left + right
 	var leftIndex = 0
 	var rightIndex = 0
@@ -79,11 +129,30 @@ func merge(left: [Int], right: [Int]) -> [Int] {
 }
 
 func splitTo2(listOfItems: Array<Int>) -> split2Ways {
+/**
+	array splitting helper method only for splitting in half
+	
+		- listOfItems: int array needed to be split in half
+	
+		- returns: struct of both halfs in 'first' and 'second' members
+
+	rounding was difficult to implement as easily as python
+*/
 	let halfway = Int(ceil(Double(listOfItems.count) / Double(2)))
 	return split2Ways(first: Array<Int>(listOfItems[0..<halfway]), second: Array<Int>(listOfItems[halfway..<listOfItems.count]))
 }
 
 func splitTo3(listOfItems: Array<Int>) -> split3Ways {
+/**
+	array splitting helper method only for splitting int arrays into thirds
+	
+		- listOfITems: int array needed to be split into thirds
+	
+		- returns: struct of thirds in 'first', 'second' and 'third' members respectively
+
+	rounding was difficult to implement as easily as python, and labeled arguments start to get unsightly
+
+*/
 	let third = Int(ceil(Double(listOfItems.count) / Double(3)))
 	let double = third * 2
 	return split3Ways(first: Array<Int>(listOfItems[0..<third]), second: Array<Int>(listOfItems[third..<double]), third: Array<Int>(listOfItems[double..<listOfItems.count]))
@@ -91,6 +160,18 @@ func splitTo3(listOfItems: Array<Int>) -> split3Ways {
 
 
 func quickSort(listOfItems: [Int], pivotToUse: String) -> tuple {
+	/**
+		sort using two arrays to place elements lesser or greater than a chosen value done recursively until sorted
+		
+			- listOfItems: unsorted int array
+		
+			- pivotToUse: String of choice of pivot options include:
+				- 'middle': the middlemost element is chosen as pivot
+				- 'first': the default option, picks the first element as pivot
+		
+		besides recursive calls being cumbersome with labeled arguments and countable ranges making slices
+			 confusing was a breeze to translate
+	*/
 	let startTime = DispatchTime.now().uptimeNanoseconds
 	let endTime = DispatchTime.now().uptimeNanoseconds
 	let tempList = quickSortRecursive(listOfItems: listOfItems, pivotToUse: pivotToUse)
@@ -98,6 +179,17 @@ func quickSort(listOfItems: [Int], pivotToUse: String) -> tuple {
 }
 
 func quickSortRecursive(listOfItems: [Int], pivotToUse: String) -> [Int] {
+	/**
+		recursive helper function for quickSort such that elapsed time becomes easier to measure
+		
+			- listOfItems: unsorted array of integers
+		
+			- pivotToUse: String of chosen pivot method choices include:
+				- 'middle': the middlemost element is chosen
+				- 'first': the default option, the first element is chosen
+		
+			- returns: sorted array for the original function
+	*/
 	if(listOfItems.count <= 1){
 		return listOfItems
 	}
@@ -120,9 +212,22 @@ func quickSortRecursive(listOfItems: [Int], pivotToUse: String) -> [Int] {
 }
 
 func radixSort(listOfItems: [Int], maxDigits: Int) -> tuple {
+/**
+	A faster sort with the stipulation of a known range of values, uses characters to group elements until sorted
+	
+		- listOfItems: unsorted integer array
+	
+		- maxDigits: number of maximum characters in the array expected
+	
+		- returns: a tuple struct with list member being the sorted list and time member being the elapsed time
+	
+	translating this list was a pain, originally I attempted to 1:1 translate the method I used without any references,
+	sadly that method requires character conversion which Swift is difficult to coerce characters at a specific index or
+	call recursively on arrays of unknown types. I instead vied for a method used by Swift Datastructures book by using
+		 modulo math instead
+*/
 	let startTime = DispatchTime.now().uptimeNanoseconds
 	let endTime = DispatchTime.now().uptimeNanoseconds
-	//TODO: do me
 	var tempList = listOfItems
 	var base = 1
 	var done = false
@@ -144,6 +249,12 @@ func radixSort(listOfItems: [Int], maxDigits: Int) -> tuple {
 }
 
 func assign02_main(){
+/**
+	Main method to be called on starting the program
+
+	Creating a range of values was an interesting experience in this language as well as its version of printf
+	The result is pleasingly similar to my original given code by the professor though
+*/
 	let listRange: CountableRange<Int> = 0..<5000
 	var list1: [Int] = Array(listRange)
 	list1.shuffle()
