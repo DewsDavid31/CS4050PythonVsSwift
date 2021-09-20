@@ -292,7 +292,7 @@ func assign02_main(){
 	print(radixRes.list[..<10])
 
 
-	let listRange2: CountableRange<Int> = (1000..<6000)
+	let listRange2: CountableRange<Int> = (1001..<6000)
 	let list2: [Int] = Array(listRange2.reversed())
 	
 	bubbleRes = bubbleSort(listOfItems: list2)
