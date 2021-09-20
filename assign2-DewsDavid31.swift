@@ -17,8 +17,7 @@ typealias split2Ways = (first: [Int], second: [Int])
 func bubbleSort(listOfItems: [Int]) -> tuple {
 /**
 	A method of sort using the swapping of two elements at a time
-	
-	Stackoverflow's suggested use of dispatch time leads to odd calculations of time
+	Credit: Stackoverflow's suggested use of dispatch time, can give odd values sometimes
 	
 		- listOfItems: Int array needed to be sorted
 		- returns: tuple struct of the sorted list as list member and float of time elapsed
@@ -214,7 +213,7 @@ func quickSortRecursive(listOfItems: [Int], pivotToUse: String) -> [Int] {
 func radixSort(listOfItems: [Int], maxDigits: Int) -> tuple {
 /**
 	A faster sort with the stipulation of a known range of values, uses characters to group elements until sorted
-	
+	Credit: Used approach from the generous Kelvin Lau from raywenderlich.com	
 		- listOfItems: unsorted integer array
 	
 		- maxDigits: number of maximum characters in the array expected
